@@ -1,0 +1,17 @@
+{
+  "feature": "backup.report",
+  "fingerprint": "c4912aae1f9b01a0a71b6fd70c3b7616fb8138a4345b9c235ea05e87aeb108b0",
+  "reviewer": "/root/independent_embed_review",
+  "verdict": "pass",
+  "findings": [],
+  "evidence": [
+    "審查基準 1206ee00337617e14eed3d9039091bb6f221e8fe 與 staged candidate；重新執行 explain 確認指紋一致。",
+    "閱讀完整報告程式、Webhook 樣板、安裝器、systemd drop-in、流程圖、契約、安裝文件及測試，並審查新增主機結束時間與兩項封存完整性判斷。",
+    "主代理回報兩台主機的實際服務均指定 etc.pxar 和 pve-config.pxar，210 實際 journal 含 End Time；程式缺少任一速度或結束時間時標示資料不足。",
+    "報告測試 9 項、安裝器測試 4 項及程式自我測試均通過。"
+  ],
+  "limitations": [
+    "未自行登入正式 PVE 或執行端到端通知測試，部署後仍需確認兩台 Discord 送達與實際 journal 格式。",
+    "207 目前尚無 guarded service 真實執行紀錄；其完整 VM／CT 報告須於實際備份後驗證。"
+  ]
+}

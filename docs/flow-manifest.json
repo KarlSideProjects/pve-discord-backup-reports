@@ -4,7 +4,8 @@
     "include": [
       "pbs-report.py",
       "systemd/*.conf",
-      "install.sh"
+      "install.sh",
+      "templates/*.hbs"
     ],
     "exclude": {}
   },
@@ -12,12 +13,14 @@
     {
       "path": "pbs-report.py",
       "kind": "python",
-      "md5": "fca1755b2e4aa993b9ad543837d43b6d",
-      "context_hash": "5fc5f65cd2c844648fd09d1ba0eb8d883ce92d058d0c62ca777ef7c865ca3b7e",
+      "md5": "7ec1f41b604fc015ec2fbe9d6484db81",
+      "context_hash": "c90be2afcefcb5c49ac21cd0558b59fc911e6263fecdf50b644b7987df08d613",
       "symbols": {
-        "extract": "d4f9996be0ae3ae54d4e42a99043ea018f2fa448d569a698b646906cb5341037",
-        "render": "b7089bd1d08b58b5030f8260495370a683ae6a9811e05b5983efeb4a4988f43a",
-        "main": "3534c3b5405d97c38ccb2cf9a536fc16b7b5c7140b02d5ae4367feef7d5983d0"
+        "extract": "deb38c22b9ecbdcf33ac1f89d80f87bfe36775e1a5504b305f3b179e1ed94ccd",
+        "build_report": "73c08c86dc3058db9990651e4febe66a430696cf942ead8aa5943899bea35cc7",
+        "notification_severity": "4f70860cc3bf79e3bf8555209c49d37054afea7681a4c21809377e31f1f8fb8c",
+        "embed_payload": "606e43d7fe2a6bd3118e82157067f514dfe79ec6738852518c90a39e645b82ae",
+        "main": "512c941bf429550d6534bd81d1989625d95563fe3093d5e6e45dfb578fd36154"
       }
     },
     {
@@ -34,6 +37,11 @@
       "path": "install.sh",
       "kind": "file",
       "md5": "a958f4f531481b75c98d75f0bb2405bb"
+    },
+    {
+      "path": "templates/discord-webhook.hbs",
+      "kind": "file",
+      "md5": "64492f458b278aefde0d2d521151f5f3"
     }
   ],
   "features": [
@@ -57,17 +65,17 @@
         {
           "node": "C",
           "path": "pbs-report.py",
-          "symbol": "render"
+          "symbol": "build_report"
         },
         {
           "node": "D",
           "path": "pbs-report.py",
-          "symbol": "render"
+          "symbol": "build_report"
         },
         {
           "node": "E",
           "path": "pbs-report.py",
-          "symbol": "render"
+          "symbol": "build_report"
         },
         {
           "node": "F",
@@ -77,7 +85,7 @@
         {
           "node": "F",
           "path": "pbs-report.py",
-          "symbol": "render"
+          "symbol": "build_report"
         },
         {
           "node": "G",
@@ -113,22 +121,37 @@
         {
           "node": "K",
           "path": "install.sh"
+        },
+        {
+          "node": "F",
+          "path": "pbs-report.py",
+          "symbol": "embed_payload"
+        },
+        {
+          "node": "G",
+          "path": "templates/discord-webhook.hbs"
+        },
+        {
+          "node": "G",
+          "path": "pbs-report.py",
+          "symbol": "notification_severity"
         }
       ],
       "depends_on": [],
       "policy_inputs": [
         "docs/flows/contracts.md",
-        "tests/test-install.py"
+        "tests/test-install.py",
+        "tests/test_report.py"
       ]
     }
   ],
   "reviews": [
     {
       "feature": "backup.report",
-      "fingerprint": "e0366ab395110b88aeadf7c059fa95c8fee615dfd8ff47725752a8b4b211e27d",
-      "reviewer": "/root/flow_review",
+      "fingerprint": "1bcb93babca45b4cdbbf690b35ffaf1ab2c38b5946d34ac7b04fb5162d793bf1",
+      "reviewer": "/root/independent_embed_review",
       "verdict": "pass",
-      "evidence": "docs/flow-evidence/reviews/backup.report/e0366ab395110b88aeadf7c059fa95c8fee615dfd8ff47725752a8b4b211e27d.json"
+      "evidence": "docs/flow-evidence/reviews/backup.report/1bcb93babca45b4cdbbf690b35ffaf1ab2c38b5946d34ac7b04fb5162d793bf1.json"
     }
   ],
   "policy_inputs": [

@@ -1,6 +1,6 @@
 # PVE 備份 Discord 報告
 
-自動把 PVE 的備份結果整理成表格，送到 Discord。
+自動把 PVE 的備份結果整理成 Discord 卡片，方便在手機查看。
 
 ![手繪風格：PVE 備份與 Discord 報告流程](docs/images/backup-flow.svg)
 
