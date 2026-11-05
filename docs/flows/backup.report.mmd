@@ -1,0 +1,24 @@
+flowchart TD
+A["systemd 啟動報告"]
+B["讀取本次 journal 與結果"]
+C{"已知 PBS 離線略過"}
+D["不通知"]
+E["判定備份狀態"]
+F["整理主機或 VM CT 報告"]
+G["透過 PVE Notifications 發送"]
+H["Discord 接收或通知失敗"]
+I["systemd 限時並忽略通知錯誤"]
+J["報告讀取或處理失敗，不發送"]
+A --> B
+B --> C
+C -->|是| D
+C -->|否| E
+E --> F
+F --> G
+G --> H
+H --> I
+D --> I
+B -->|讀取失敗| J
+F -->|處理失敗| J
+G -->|程式逾時或呼叫失敗| J
+J --> I

@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "scope": {
+    "include": [
+      "pbs-report.py",
+      "systemd/*.conf"
+    ],
+    "exclude": {}
+  },
+  "sources": [
+    {
+      "path": "pbs-report.py",
+      "kind": "python",
+      "md5": "fca1755b2e4aa993b9ad543837d43b6d",
+      "context_hash": "5fc5f65cd2c844648fd09d1ba0eb8d883ce92d058d0c62ca777ef7c865ca3b7e",
+      "symbols": {
+        "extract": "d4f9996be0ae3ae54d4e42a99043ea018f2fa448d569a698b646906cb5341037",
+        "render": "b7089bd1d08b58b5030f8260495370a683ae6a9811e05b5983efeb4a4988f43a",
+        "main": "3534c3b5405d97c38ccb2cf9a536fc16b7b5c7140b02d5ae4367feef7d5983d0"
+      }
+    },
+    {
+      "path": "systemd/guest.conf",
+      "kind": "file",
+      "md5": "82233b64824fae6e106f6244bc6f6bab"
+    },
+    {
+      "path": "systemd/host.conf",
+      "kind": "file",
+      "md5": "8e764eaabb28890ad32319cb9737afd9"
+    }
+  ],
+  "features": [
+    {
+      "id": "backup.report",
+      "flow": "docs/flows/backup.report.mmd",
+      "mappings": [
+        {
+          "node": "A",
+          "path": "systemd/guest.conf"
+        },
+        {
+          "node": "A",
+          "path": "systemd/host.conf"
+        },
+        {
+          "node": "B",
+          "path": "pbs-report.py",
+          "symbol": "main"
+        },
+        {
+          "node": "C",
+          "path": "pbs-report.py",
+          "symbol": "render"
+        },
+        {
+          "node": "D",
+          "path": "pbs-report.py",
+          "symbol": "render"
+        },
+        {
+          "node": "E",
+          "path": "pbs-report.py",
+          "symbol": "render"
+        },
+        {
+          "node": "F",
+          "path": "pbs-report.py",
+          "symbol": "extract"
+        },
+        {
+          "node": "F",
+          "path": "pbs-report.py",
+          "symbol": "render"
+        },
+        {
+          "node": "G",
+          "path": "pbs-report.py",
+          "symbol": "main"
+        },
+        {
+          "node": "H",
+          "path": "pbs-report.py",
+          "symbol": "main"
+        },
+        {
+          "node": "I",
+          "path": "systemd/guest.conf"
+        },
+        {
+          "node": "I",
+          "path": "systemd/host.conf"
+        },
+        {
+          "node": "J",
+          "path": "pbs-report.py",
+          "symbol": "main"
+        },
+        {
+          "node": "J",
+          "path": "systemd/guest.conf"
+        },
+        {
+          "node": "J",
+          "path": "systemd/host.conf"
+        }
+      ],
+      "depends_on": [],
+      "policy_inputs": [
+        "docs/flows/contracts.md"
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "feature": "backup.report",
+      "fingerprint": "ed5d9a647c6c3b69accedca1534be392e7dc9b78cc54383cb54decef7028c3dc",
+      "reviewer": "/root/flow_review",
+      "verdict": "pass",
+      "evidence": "docs/flow-evidence/reviews/backup.report/ed5d9a647c6c3b69accedca1534be392e7dc9b78cc54383cb54decef7028c3dc.json"
+    }
+  ],
+  "policy_inputs": [
+    "AGENTS.md",
+    "tools/flow-docs/flow_checker.py",
+    "tools/flow-docs/flow_parsers.py"
+  ],
+  "limits": {
+    "nodes": 25,
+    "branch_depth": 8
+  }
+}
