@@ -1,4 +1,5 @@
 flowchart TD
+K["驗證 Release 並安裝或回復掛鉤"]
 A["systemd 啟動報告"]
 B["讀取本次 journal 與結果"]
 C{"已知 PBS 離線略過"}
@@ -9,6 +10,7 @@ G["透過 PVE Notifications 發送"]
 H["Discord 接收或通知失敗"]
 I["systemd 限時並忽略通知錯誤"]
 J["報告讀取或處理失敗，不發送"]
+K --> A
 A --> B
 B --> C
 C -->|是| D

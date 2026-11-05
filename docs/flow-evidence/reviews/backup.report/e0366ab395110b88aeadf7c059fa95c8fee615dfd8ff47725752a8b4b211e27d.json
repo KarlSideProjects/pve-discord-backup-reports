@@ -1,0 +1,18 @@
+{
+  "feature": "backup.report",
+  "fingerprint": "e0366ab395110b88aeadf7c059fa95c8fee615dfd8ff47725752a8b4b211e27d",
+  "reviewer": "/root/flow_review",
+  "verdict": "pass",
+  "findings": [],
+  "evidence": [
+    "對 staged candidate 執行 checker packet，確認 fingerprint 與指定值一致。",
+    "tests/test-install.py 已加入 backup.report 的 feature-local policy_inputs。",
+    "python3 tests/test-install.py 的四項測試通過。",
+    "gh repo view 實際回傳 PUBLIC，撤回先前依私人倉庫狀態提出的下載認證 finding。",
+    "已審閱安裝器、流程、契約、安裝文件及相應 staged diff。"
+  ],
+  "limitations": [
+    "Release 尚未建立，無法驗證文件中的公開下載網址與發行資產雜湊；發布後仍須實際確認。",
+    "未自行執行 PVE VM、真實 PBS、Discord 端到端測試或手動回復；VM 模擬通知測試結果由委派者提供。"
+  ]
+}

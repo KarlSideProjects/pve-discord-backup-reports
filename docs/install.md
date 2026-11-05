@@ -1,4 +1,4 @@
-# Adrian：安裝與維護
+# AI agent：安裝與維護
 
 [返回圖解首頁](../README.md)
 
@@ -19,48 +19,63 @@
 
 兩台 PVE 各自保存 `/usr/local/sbin/pbs-report` 和 systemd drop-in。GitHub 是原始碼與維護文件，更新倉庫不會自動部署到任何主機。兩台 PVE 的 Node Notes 與 PBS Notes 記錄站點排程和存取入口；PBS 不會從倉庫拉取程式。不同機器的設定與套件更新可能造成行為差異。
 
-## 安裝與更新（部分已演練）
+## 從 Release 安裝與更新
 
-**前提**：在目標 PVE 使用 root shell；確認 Python 3、`journalctl`、`timeout` 和 PVE 的 `PVE::Notify` 可用。備份服務、PBS 離線檢查、PVE Discord Webhook 與 matcher 必須先行設定。本倉庫不提供憑證，也不保證可直接套用至其他備份服務或 PVE 版本。隔離的乾淨 Python 容器已實際執行自我測試及檔案安裝比對；該容器沒有 systemd 和 PVE::Notify，因此尚未完成全新 PVE 的整套演練。既有兩台 PVE 曾以相同內容安裝並測試通知。
+**前提**：以 root 在 PVE 執行；先準備上述兩個備份服務、各自排程與通知端點。安裝器不建立這些服務，也不設定 PBS、Webhook 或排程。全新 PVE 不自帶這些服務；本倉庫目前沒有提供從零建立它們的步驟。
 
-1. 在目標主機的可信目錄取得私人倉庫。需先設定有讀取權限的 GitHub 驗證；不要把 token 放進網址、命令歷史或 Notes。
+安排維護時段，先暫停所有可能啟動這兩個服務的 timer、cron 與人工作業，等待目前工作完成。安裝器只檢查當下狀態，不能阻止後續排程啟動。安裝及驗證完成後，恢復原本有啟用的排程。
+
+1. 使用 [v0.1.0 Release](https://github.com/KarlSideProjects/pve-discord-backup-reports/releases/tag/v0.1.0) 指定的檔案及下列固定校驗值。下載、校驗後再執行，不要把網路腳本直接送進 shell。校驗值與檔案若來自同一 GitHub 帳號，無法獨立證明發行者身分。
 
    ```bash
-   git clone https://github.com/KarlSideProjects/pve-discord-backup-reports.git
-   cd pve-discord-backup-reports
+   set -e
+   workdir=$(mktemp -d)
+   cd "$workdir"
+   base=https://github.com/KarlSideProjects/pve-discord-backup-reports/releases/download/v0.1.0
+   curl -fL --proto '=https' --tlsv1.2 -o install.sh "$base/install.sh"
+   curl -fL --proto '=https' --tlsv1.2 -o report.tar.gz "$base/report.tar.gz"
+   echo '5562edf0931609a519e8c7bd7d279ae7a0f73958524fc3e12399ae5f6cb3a542  install.sh' | sha256sum -c
+   echo 'e93641469d01024eef8157aebcc70301e15f11650c83d44416174e2644004e70  report.tar.gz' | sha256sum -c
+   sh install.sh report.tar.gz e93641469d01024eef8157aebcc70301e15f11650c83d44416174e2644004e70
    ```
 
-   執行自我測試並檢查現有版本。首次安裝時，本機檔案可能尚不存在：
+2. 記錄輸出的 `Rollback directory`。安裝器先檢查依賴、服務、檔案與校驗碼，再保存原檔、安裝掛鉤並重新載入 systemd；失敗時嘗試回復。若顯示 `Rollback incomplete`，使用下方手動回復步驟。安裝器不執行備份或發送通知。
+3. 確認服務狀態與掛鉤，恢復先前啟用的排程：
 
    ```bash
-   python3 pbs-report.py --self-test
-   sha256sum pbs-report.py
-   if test -f /usr/local/sbin/pbs-report; then sha256sum /usr/local/sbin/pbs-report; else echo "首次安裝：尚無本機副本"; fi
-   ```
-
-2. 寫入目標主機（會覆蓋現有報告程式及同名 drop-in；先保留原檔以便回復）：
-
-   ```bash
-   install -m 0755 pbs-report.py /usr/local/sbin/pbs-report
-   install -D -m 0644 systemd/guest.conf /etc/systemd/system/pbs-guarded-backup.service.d/20-discord-report.conf
-   install -D -m 0644 systemd/host.conf /etc/systemd/system/pve-host-config-backup.service.d/20-discord-report.conf
-   systemctl daemon-reload
-   systemctl show pbs-guarded-backup.service pve-host-config-backup.service -p Id -p ExecStopPost
-   ```
-
-3. 實際觸發合適的備份，確認 PVE task／journal 與 Discord 報告一致；勿在既有備份執行中重複啟動。主機備份可用 `systemctl start pve-host-config-backup.service`，VM／CT 可用 `systemctl start pbs-guarded-backup.service`。這些指令會實際寫入備份並可能執行保留清理。
-
-4. 檢查排程及日誌：
-
-   ```bash
+   systemctl show pbs-guarded-backup.service pve-host-config-backup.service -p Id -p LoadState -p ExecStopPost
    systemctl list-timers pbs-guarded-backup.timer pve-host-config-backup.timer
+   ```
+
+4. 在合適時間依本站備份規則進行測試，核對 journal、PBS 與 Discord。`systemctl start pve-host-config-backup.service` 或 `systemctl start pbs-guarded-backup.service` 會**實際寫入備份並可能清理舊備份**，不要在工作進行中重複執行。
+
+   ```bash
    journalctl -u pbs-guarded-backup.service -n 100 --no-pager
    journalctl -u pve-host-config-backup.service -n 100 --no-pager
    ```
 
+測試 VM 108 使用測試用空服務，驗證缺少服務時中止、安裝與模擬通知送達；這不代表真實 PBS 備份或還原已驗證。正式環境測試範圍見「安全與限制」。
+
 ## 還原報告程式
 
-若更新後不正確，將先前保留的 `/usr/local/sbin/pbs-report` 和兩個 drop-in 還原，再執行 `systemctl daemon-reload`。若只要停止詳細報告，可移除兩個 `20-discord-report.conf` 並 reload；備份與原生 PVE 通知仍依原本設定執行。變動前先確認檔案內容與路徑，勿移除其他 drop-in。
+若更新後不正確，在 root shell 將下方路徑換成安裝前輸出的回復目錄。先確認該目錄包含保存的檔案或 `absent` 清單，避免選錯目錄。這會還原保存的檔案，並移除安裝前不存在的指定檔案。手動回復步驟尚未在 PVE 測試 VM 演練：
+
+```bash
+(
+  set -e
+  backup_dir=/root/pbs-report-rollback.請換成實際目錄
+  test -d "$backup_dir" || { echo '回復目錄不存在'; exit 1; }
+  if test -f "$backup_dir/absent"; then
+    while IFS= read -r path; do rm -f "/$path"; done < "$backup_dir/absent"
+  fi
+  for path in usr/local/sbin/pbs-report etc/systemd/system/pbs-guarded-backup.service.d/20-discord-report.conf etc/systemd/system/pve-host-config-backup.service.d/20-discord-report.conf; do
+    if test -f "$backup_dir/$path"; then cp -a "$backup_dir/$path" "/$path"; fi
+  done
+  systemctl daemon-reload
+)
+```
+
+確認服務的 `ExecStopPost` 已回到原狀。若只要停止詳細報告，可移除兩個 `20-discord-report.conf` 並 reload；備份與原生 PVE 通知仍依原本設定執行。變動前先確認檔案內容與路徑，勿移除其他 drop-in。
 
 ## 安全與限制
 

@@ -3,7 +3,8 @@
   "scope": {
     "include": [
       "pbs-report.py",
-      "systemd/*.conf"
+      "systemd/*.conf",
+      "install.sh"
     ],
     "exclude": {}
   },
@@ -28,6 +29,11 @@
       "path": "systemd/host.conf",
       "kind": "file",
       "md5": "8e764eaabb28890ad32319cb9737afd9"
+    },
+    {
+      "path": "install.sh",
+      "kind": "file",
+      "md5": "a958f4f531481b75c98d75f0bb2405bb"
     }
   ],
   "features": [
@@ -103,21 +109,26 @@
         {
           "node": "J",
           "path": "systemd/host.conf"
+        },
+        {
+          "node": "K",
+          "path": "install.sh"
         }
       ],
       "depends_on": [],
       "policy_inputs": [
-        "docs/flows/contracts.md"
+        "docs/flows/contracts.md",
+        "tests/test-install.py"
       ]
     }
   ],
   "reviews": [
     {
       "feature": "backup.report",
-      "fingerprint": "ed5d9a647c6c3b69accedca1534be392e7dc9b78cc54383cb54decef7028c3dc",
+      "fingerprint": "e0366ab395110b88aeadf7c059fa95c8fee615dfd8ff47725752a8b4b211e27d",
       "reviewer": "/root/flow_review",
       "verdict": "pass",
-      "evidence": "docs/flow-evidence/reviews/backup.report/ed5d9a647c6c3b69accedca1534be392e7dc9b78cc54383cb54decef7028c3dc.json"
+      "evidence": "docs/flow-evidence/reviews/backup.report/e0366ab395110b88aeadf7c059fa95c8fee615dfd8ff47725752a8b4b211e27d.json"
     }
   ],
   "policy_inputs": [
