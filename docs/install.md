@@ -19,9 +19,9 @@
 
 兩台 PVE 各自保存 `/usr/local/sbin/pbs-report` 和 systemd drop-in。GitHub 是原始碼與維護文件，更新倉庫不會自動部署到任何主機。兩台 PVE 的 Node Notes 與 PBS Notes 記錄站點排程和存取入口；PBS 不會從倉庫拉取程式。不同機器的設定與套件更新可能造成行為差異。
 
-## 安裝與更新（草稿）
+## 安裝與更新（部分已演練）
 
-**前提**：在目標 PVE 使用 root shell；確認 Python 3、`journalctl`、`timeout` 和 PVE 的 `PVE::Notify` 可用。備份服務、PBS 離線檢查、PVE Discord Webhook 與 matcher 必須先行設定。本倉庫不提供憑證，也不保證可直接套用至其他備份服務或 PVE 版本。以下從乾淨 checkout 部署的整套流程尚未演練；既有兩台主機曾以相同內容安裝並測試。
+**前提**：在目標 PVE 使用 root shell；確認 Python 3、`journalctl`、`timeout` 和 PVE 的 `PVE::Notify` 可用。備份服務、PBS 離線檢查、PVE Discord Webhook 與 matcher 必須先行設定。本倉庫不提供憑證，也不保證可直接套用至其他備份服務或 PVE 版本。隔離的乾淨 Python 容器已實際執行自我測試及檔案安裝比對；該容器沒有 systemd 和 PVE::Notify，因此尚未完成全新 PVE 的整套演練。既有兩台 PVE 曾以相同內容安裝並測試通知。
 
 1. 在目標主機的可信目錄取得私人倉庫。需先設定有讀取權限的 GitHub 驗證；不要把 token 放進網址、命令歷史或 Notes。
 

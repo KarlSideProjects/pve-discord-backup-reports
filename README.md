@@ -2,29 +2,26 @@
 
 自動把 PVE 的備份結果整理成表格，送到 Discord。
 
-```mermaid
-flowchart LR
-  A["PVE 定時備份"] --> B["PBS 儲存備份"]
-  A --> C["整理備份報告"]
-  C --> D["PVE 通知設定"]
-  D --> E["Discord 備份通知"]
-```
+![手繪風格：PVE 備份與 Discord 報告流程](docs/images/backup-flow.svg)
 
 報告包含 **成功或失敗、開始與結束時間、可取得的處理速度**。PBS 離線時會跳過，不發通知，也不會自動補跑。
 
 ## Adrian：安裝與維護
 
-```mermaid
-flowchart LR
-  A["準備 PVE 備份服務<br/>及 Discord Webhook"] --> B["取得私人倉庫"]
-  B --> C["測試並安裝報告程式"]
-  C --> D["觸發備份並確認通知"]
-```
+1. 準備備份服務與 Discord Webhook。
+2. 取得倉庫，安裝並測試報告程式。
+3. 執行備份，核對 Discord 報告。
 
 👉 [安裝、更新、驗證與回復步驟](docs/install.md)
 
 🔎 [程式流程與追蹤範圍](docs/flows/README.md)
 
-兩台 PVE 各執行自己的程式；**GitHub 更新不會自動部署**。PBS 只儲存備份，不執行本程式。安裝指引中的完整乾淨安裝流程仍待演練。
+兩台 PVE 各執行自己的程式；**GitHub 更新不會自動部署**。PBS 只儲存備份，不執行本程式。檔案安裝已在隔離容器演練；完整 PVE 安裝與通知仍待演練。
 
 > Webhook 網址、密碼與金鑰請留在 PVE，勿提交至 GitHub。
+
+## Discord 通知範例
+
+以下為模擬畫面與數值，實際名稱、格式及速度依環境而異。
+
+![Discord 的成功與失敗備份通知示意](docs/images/discord-examples.svg)
